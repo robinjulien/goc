@@ -78,8 +78,7 @@ func TestNewToken(t *testing.T) {
 }
 
 func TestNextToken(t *testing.T) {
-	l := New(strings.NewReader(`* 	-+==[]=<=>=<>!!=++--&&&|||(),;{}/@
-	return; struct; typedef; union; register; static; var; 123.456;`))
+	l := New(strings.NewReader(`* 	-+==[]=<=>=<>!!=++--&&&|||(),;{}/@ var; 123.456;`))
 
 	table := make([]token.Token, 0)
 
@@ -120,18 +119,6 @@ func TestNextToken(t *testing.T) {
 		token.CurlyBracketClose,
 		token.Divide,
 		token.Invalid,
-		token.Return,
-		token.SemiColon,
-		token.Struct,
-		token.SemiColon,
-		token.Typedef,
-		token.SemiColon,
-		token.Union,
-		token.SemiColon,
-		token.Register,
-		token.SemiColon,
-		token.Static,
-		token.SemiColon,
 		token.Identifier,
 		token.SemiColon,
 		token.NumberLiteral,
@@ -142,6 +129,61 @@ func TestNextToken(t *testing.T) {
 	for i, resToken := range table {
 		if resToken.Type != expected[i] {
 			t.Errorf("Expected %v got %v", expected[i], resToken.Type)
+		}
+	}
+}
+
+func TestKeywords(t *testing.T) {
+	l := New(strings.NewReader(`auto break case char const continue default do
+	double else enum extern float for goto if
+	int long register return short signed sizeof static
+	struct switch typedef union unsigned void volatile while`))
+
+	expected := []token.Type{
+		token.Auto,
+		token.Break,
+		token.Case,
+		token.Char,
+		token.Const,
+		token.Continue,
+		token.Default,
+		token.Do,
+		token.Double,
+		token.Else,
+		token.Enum,
+		token.Extern,
+		token.Float,
+		token.For,
+		token.Goto,
+		token.If,
+		token.Int,
+		token.Long,
+		token.Register,
+		token.Return,
+		token.Short,
+		token.Signed,
+		token.Sizeof,
+		token.Static,
+		token.Struct,
+		token.Switch,
+		token.Typedef,
+		token.Union,
+		token.Unsigned,
+		token.Void,
+		token.Volatile,
+		token.While,
+		token.EOF,
+	}
+
+	for i := 0; ; i++ {
+		tok := l.NextToken()
+
+		if tok.Type != expected[i] {
+			t.Errorf("Expected %v got %v", expected[i], tok.Type)
+		}
+
+		if tok.Type == token.EOF {
+			break
 		}
 	}
 }
