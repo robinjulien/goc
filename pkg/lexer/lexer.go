@@ -159,7 +159,7 @@ func (l *Lexer) NextToken() token.Token {
 			}
 		} else if IsNumberExtended(c) {
 			number := l.GetNumber(c)
-			return l.NewTokenLitteral(token.NumberConstant, number)
+			return l.NewTokenLitteral(token.NumberLiteral, number)
 		}
 		return l.NewToken(token.Invalid)
 	}

@@ -49,9 +49,9 @@ const (
 
 	Not
 
-	StringLitteral
-	ASCIILitteral
-	NumberConstant
+	StringLiteral
+	ASCIILiteral
+	NumberLiteral
 
 	Coma
 	SemiColon
