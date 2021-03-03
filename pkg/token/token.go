@@ -14,15 +14,16 @@ type Token struct {
 
 // Token types list
 const (
-	CurlyBracketOpen Type = iota
-	CurlyBracketClose
+	CurlyBracketOpen  Type = iota // {
+	CurlyBracketClose             // }
 
-	SquareBracketOpen
-	SquareBracketClose
+	SquareBracketOpen  // [
+	SquareBracketClose // ]
 
-	ParanthesisOpen
-	ParanthesisClose
+	ParanthesisOpen  // (
+	ParanthesisClose // )
 
+	// Keywords
 	Auto
 	Break
 	Case
@@ -56,39 +57,62 @@ const (
 	Volatile
 	While
 
-	Plus
-	Minus
-	Asterisk
-	Divide
+	// Arithmetic Operators
+	Plus    // +
+	Minus   // -
+	Divide  // /
+	Modulus // %
 
-	BitwiseAnd
-	BitwiseOr
+	// Bitwise Operators
+	BitwiseAnd // &
+	BitwiseOr  // |
+	LeftShift  // <<
+	RightShift // >>
 
-	LowerThan
-	GreaterThan
-	LowerThanEqual
-	GreaterThanEqual
-	Equals
-	NotEquals
+	LowerThan        // <
+	GreaterThan      // >
+	LowerThanEqual   // <=
+	GreaterThanEqual // >=
+	Equals           // ==
+	NotEquals        // !=
 
-	LogicalAnd
-	LogicalOr
+	// Logical Operators
+	LogicalAnd // &&
+	LogicalOr  // ||
+	Not        // !
 
-	Assign
+	// Assign Operators
+	Assign        // =
+	AssignPlus    // +=
+	AssignMinus   // -=
+	AssignTimes   // *=
+	AssignDivide  // /=
+	AssignModulus // %=
+	AssignAnd     // &=
+	AssignOr      // |=
+	AssignXor     // ^=
 
-	Not
+	// Literals
+	StringLiteral // "string"
+	ASCIILiteral  // 'o'
+	NumberLiteral // 123, 123.456
 
-	StringLiteral
-	ASCIILiteral
-	NumberLiteral
+	// Punctuation
+	Dot       // .
+	Coma      // ,
+	SemiColon // ;
+	Colon     // :
+	Ternary   // ?
 
-	Coma
-	SemiColon
-
+	// Increment/Decrement operators
 	Increment
 	Decrement
 
-	Identifier
-	EOF
-	Invalid
+	// Special operators
+	Asterisk  // *
+	Ampersand // &
+
+	Identifier // var name, function name, struct member
+	EOF        // End of file
+	Invalid    // Invalid token
 )
