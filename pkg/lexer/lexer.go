@@ -3,7 +3,6 @@ package lexer
 import (
 	"bufio"
 	"bytes"
-	"fmt"
 	"io"
 
 	"github.com/robinjulien/goc/pkg/token"
@@ -63,14 +62,9 @@ func (l *Lexer) NewToken(typ token.TokenType) token.Token {
 func (l *Lexer) NextToken() token.Token {
 	c := l.ReadChar()
 
-	fmt.Println(c)
-
 	for IsIgnoredChar(c) {
 		c = l.ReadChar()
-		fmt.Println("on est la 1", c)
 	}
-
-	fmt.Println("on est la 2")
 
 	switch c {
 	case 0:
@@ -144,6 +138,29 @@ func (l *Lexer) NextToken() token.Token {
 		}
 		return l.NewToken(token.BitwiseOr)
 	default:
+		if IsLetterExtended(c) {
+			word := l.GetWord(c)
+
+			switch word {
+			case "return":
+				return l.NewToken(token.Return)
+			case "struct":
+				return l.NewToken(token.Struct)
+			case "union":
+				return l.NewToken(token.Union)
+			case "register":
+				return l.NewToken(token.Register)
+			case "static":
+				return l.NewToken(token.Static)
+			case "typedef":
+				return l.NewToken(token.TypeDef)
+			default:
+				return l.NewTokenLitteral(token.Identifier, word)
+			}
+		} else if IsNumberExtended(c) {
+			number := l.GetNumber(c)
+			return l.NewTokenLitteral(token.NumberConstant, number)
+		}
 		return l.NewToken(token.Invalid)
 	}
 }
@@ -167,6 +184,25 @@ func (l *Lexer) GetWord(firstChar byte) string {
 	return buf.String()
 }
 
+// GetNumber returns the next number (float or int)
+func (l *Lexer) GetNumber(firstChar byte) string {
+	buf := bytes.Buffer{}
+	buf.WriteByte(firstChar)
+
+	for {
+		peekedBytes, err := l.reader.Peek(1)
+
+		if err != nil || (!IsNumberExtended(peekedBytes[0])) {
+			break
+		}
+
+		c := l.ReadChar()
+		buf.WriteByte(c)
+	}
+
+	return buf.String()
+}
+
 // IsIgnoredChar returns if the given b char is an ignored char or not
 func IsIgnoredChar(b byte) bool {
 	switch b {
@@ -179,7 +215,7 @@ func IsIgnoredChar(b byte) bool {
 
 // IsAlphaNumerical returns if the given b char is a letter or a number
 func IsAlphaNumerical(b byte) bool {
-	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z') || (b >= '0' && b <= '9')
+	return IsLetterExtended(b) || IsNumber(b)
 }
 
 // IsLetter returns if the given b char is a letter
@@ -187,7 +223,17 @@ func IsLetter(b byte) bool {
 	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z')
 }
 
+// IsLetterExtended returns if the given b char is a letter or an underscore
+func IsLetterExtended(b byte) bool {
+	return (b >= 'a' && b <= 'z') || (b >= 'A' && b <= 'Z') || b == '_'
+}
+
 // IsNumber returns if the given b char is a letter
 func IsNumber(b byte) bool {
 	return (b >= '0' && b <= '9')
+}
+
+// IsNumberExtended returns if the given b char is a letter or a dot
+func IsNumberExtended(b byte) bool {
+	return (b >= '0' && b <= '9') || b == '.'
 }

@@ -78,7 +78,8 @@ func TestNewToken(t *testing.T) {
 }
 
 func TestNextToken(t *testing.T) {
-	l := New(strings.NewReader("* 	-+==[]=<=>=<>!!=++--&&&|||(),;{}/@"))
+	l := New(strings.NewReader(`* 	-+==[]=<=>=<>!!=++--&&&|||(),;{}/@
+	return; struct; typedef; union; register; static; var;`))
 
 	table := make([]token.Token, 0)
 
@@ -119,6 +120,20 @@ func TestNextToken(t *testing.T) {
 		token.CurlyBracketClose,
 		token.Divide,
 		token.Invalid,
+		token.Return,
+		token.SemiColon,
+		token.Struct,
+		token.SemiColon,
+		token.TypeDef,
+		token.SemiColon,
+		token.Union,
+		token.SemiColon,
+		token.Register,
+		token.SemiColon,
+		token.Static,
+		token.SemiColon,
+		token.Identifier,
+		token.SemiColon,
 		token.EOF,
 	}
 
@@ -152,6 +167,29 @@ func TestGetWord(t *testing.T) {
 	}
 }
 
+func TestGetNumber(t *testing.T) {
+	l := New(strings.NewReader("+=21/123.456--"))
+
+	l.ReadChar()
+	l.ReadChar()
+
+	c := l.ReadChar()
+	res := l.GetNumber(c)
+
+	if res != "21" {
+		t.Errorf("Expected %s got %s", "21", res)
+	}
+
+	l.ReadChar()
+
+	c = l.ReadChar()
+	res = l.GetNumber(c)
+
+	if res != "123.456" {
+		t.Errorf("Expected %s got %s", "123.456", res)
+	}
+}
+
 func TestIsIgnoredChar(t *testing.T) {
 	serie := map[byte]bool{
 		'+': false,
@@ -159,6 +197,7 @@ func TestIsIgnoredChar(t *testing.T) {
 		'R': false,
 		'6': false,
 		' ': true,
+		'_': false,
 	}
 
 	for arg, expected := range serie {
@@ -175,6 +214,7 @@ func TestIsAlphaNumerical(t *testing.T) {
 		'R': true,
 		'6': true,
 		' ': false,
+		'_': true,
 	}
 
 	for arg, expected := range serie {
@@ -191,10 +231,28 @@ func TestIsLetter(t *testing.T) {
 		'R': true,
 		'6': false,
 		' ': false,
+		'_': false,
 	}
 
 	for arg, expected := range serie {
 		if res := IsLetter(arg); res != expected {
+			t.Errorf("Expected %v for %c got %v", expected, arg, res)
+		}
+	}
+}
+
+func TestIsLetterExtended(t *testing.T) {
+	serie := map[byte]bool{
+		'+': false,
+		'f': true,
+		'R': true,
+		'6': false,
+		' ': false,
+		'_': true,
+	}
+
+	for arg, expected := range serie {
+		if res := IsLetterExtended(arg); res != expected {
 			t.Errorf("Expected %v for %c got %v", expected, arg, res)
 		}
 	}
@@ -207,6 +265,7 @@ func TestIsNumber(t *testing.T) {
 		'R': false,
 		'6': true,
 		' ': false,
+		'_': false,
 	}
 
 	for arg, expected := range serie {

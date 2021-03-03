@@ -51,6 +51,7 @@ const (
 
 	StringLitteral
 	ASCIILitteral
+	NumberConstant
 
 	Coma
 	SemiColon
