@@ -1,17 +1,20 @@
 package token
 
-type TokenType int
+// Type is token type
+type Type int
 
+// Token includes type of a token and all informations related to int
 type Token struct {
-	Type     TokenType
+	Type     Type
 	File     string
 	Line     int
 	Column   int
 	Litteral string
 }
 
+// Token types list
 const (
-	CurlyBracketOpen TokenType = iota
+	CurlyBracketOpen Type = iota
 	CurlyBracketClose
 
 	SquareBracketOpen
@@ -20,12 +23,38 @@ const (
 	ParanthesisOpen
 	ParanthesisClose
 
-	Return
-	TypeDef
-	Struct
-	Union
+	Auto
+	Break
+	Case
+	Char
+	Const
+	Continue
+	Default
+	Do
+	Double
+	Else
+	Enum
+	Extern
+	Float
+	For
+	Goto
+	If
+	Int
+	Long
 	Register
+	Return
+	Short
+	Signed
+	Sizeof
 	Static
+	Struct
+	Switch
+	Typedef
+	Union
+	Unsigned
+	Void
+	Volatile
+	While
 
 	Plus
 	Minus

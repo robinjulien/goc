@@ -45,14 +45,14 @@ func (l *Lexer) PeekNextChar() byte {
 }
 
 // NewTokenLitteral returns a token given its type and its litteral
-func (l *Lexer) NewTokenLitteral(typ token.TokenType, lit string) token.Token {
+func (l *Lexer) NewTokenLitteral(typ token.Type, lit string) token.Token {
 	t := l.NewToken(typ)
 	t.Litteral = lit
 	return t
 }
 
 // NewToken returns a token given its type
-func (l *Lexer) NewToken(typ token.TokenType) token.Token {
+func (l *Lexer) NewToken(typ token.Type) token.Token {
 	return token.Token{
 		Type: typ,
 	}
@@ -142,18 +142,70 @@ func (l *Lexer) NextToken() token.Token {
 			word := l.GetWord(c)
 
 			switch word {
-			case "return":
-				return l.NewToken(token.Return)
-			case "struct":
-				return l.NewToken(token.Struct)
-			case "union":
-				return l.NewToken(token.Union)
+			case "auto":
+				return l.NewToken(token.Auto)
+			case "break":
+				return l.NewToken(token.Break)
+			case "case":
+				return l.NewToken(token.Case)
+			case "char":
+				return l.NewToken(token.Char)
+			case "const":
+				return l.NewToken(token.Const)
+			case "continue":
+				return l.NewToken(token.Continue)
+			case "default":
+				return l.NewToken(token.Default)
+			case "do":
+				return l.NewToken(token.Do)
+			case "double":
+				return l.NewToken(token.Double)
+			case "else":
+				return l.NewToken(token.Else)
+			case "enum":
+				return l.NewToken(token.Enum)
+			case "extern":
+				return l.NewToken(token.Extern)
+			case "float":
+				return l.NewToken(token.Float)
+			case "for":
+				return l.NewToken(token.For)
+			case "goto":
+				return l.NewToken(token.Goto)
+			case "if":
+				return l.NewToken(token.If)
+			case "int":
+				return l.NewToken(token.Int)
+			case "long":
+				return l.NewToken(token.Long)
 			case "register":
 				return l.NewToken(token.Register)
+			case "return":
+				return l.NewToken(token.Return)
+			case "short":
+				return l.NewToken(token.Short)
+			case "signed":
+				return l.NewToken(token.Signed)
+			case "sizeof":
+				return l.NewToken(token.Sizeof)
 			case "static":
 				return l.NewToken(token.Static)
+			case "struct":
+				return l.NewToken(token.Struct)
+			case "switch":
+				return l.NewToken(token.Switch)
 			case "typedef":
-				return l.NewToken(token.TypeDef)
+				return l.NewToken(token.Typedef)
+			case "union":
+				return l.NewToken(token.Union)
+			case "unsigned":
+				return l.NewToken(token.Unsigned)
+			case "void":
+				return l.NewToken(token.Void)
+			case "volatile":
+				return l.NewToken(token.Volatile)
+			case "while":
+				return l.NewToken(token.While)
 			default:
 				return l.NewTokenLitteral(token.Identifier, word)
 			}

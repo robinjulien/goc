@@ -79,7 +79,7 @@ func TestNewToken(t *testing.T) {
 
 func TestNextToken(t *testing.T) {
 	l := New(strings.NewReader(`* 	-+==[]=<=>=<>!!=++--&&&|||(),;{}/@
-	return; struct; typedef; union; register; static; var;`))
+	return; struct; typedef; union; register; static; var; 123.456;`))
 
 	table := make([]token.Token, 0)
 
@@ -92,7 +92,7 @@ func TestNextToken(t *testing.T) {
 		}
 	}
 
-	expected := []token.TokenType{
+	expected := []token.Type{
 		token.Asterisk,
 		token.Minus,
 		token.Plus,
@@ -124,7 +124,7 @@ func TestNextToken(t *testing.T) {
 		token.SemiColon,
 		token.Struct,
 		token.SemiColon,
-		token.TypeDef,
+		token.Typedef,
 		token.SemiColon,
 		token.Union,
 		token.SemiColon,
@@ -133,6 +133,8 @@ func TestNextToken(t *testing.T) {
 		token.Static,
 		token.SemiColon,
 		token.Identifier,
+		token.SemiColon,
+		token.NumberLiteral,
 		token.SemiColon,
 		token.EOF,
 	}
