@@ -78,9 +78,9 @@ func TestNewToken(t *testing.T) {
 }
 
 func TestNextToken(t *testing.T) {
-	l := New(strings.NewReader("* 	-+==[]"))
+	l := New(strings.NewReader("* 	-+==[]=<=>=<>!!=++--&&&|||(),;{}/@"))
 
-	table := make([]token.Token, 0, len("* 	-+=[]")+1)
+	table := make([]token.Token, 0)
 
 	for {
 		tok := l.NextToken()
@@ -95,9 +95,30 @@ func TestNextToken(t *testing.T) {
 		token.Asterisk,
 		token.Minus,
 		token.Plus,
-		token.EqualsTo,
+		token.Equals,
 		token.SquareBracketOpen,
 		token.SquareBracketClose,
+		token.Assign,
+		token.LowerThanEqual,
+		token.GreaterThanEqual,
+		token.LowerThan,
+		token.GreaterThan,
+		token.Not,
+		token.NotEquals,
+		token.Increment,
+		token.Decrement,
+		token.LogicalAnd,
+		token.BitwiseAnd,
+		token.LogicalOr,
+		token.BitwiseOr,
+		token.ParanthesisOpen,
+		token.ParanthesisClose,
+		token.Coma,
+		token.SemiColon,
+		token.CurlyBracketOpen,
+		token.CurlyBracketClose,
+		token.Divide,
+		token.Invalid,
 		token.EOF,
 	}
 
@@ -105,6 +126,29 @@ func TestNextToken(t *testing.T) {
 		if resToken.Type != expected[i] {
 			t.Errorf("Expected %v got %v", expected[i], resToken.Type)
 		}
+	}
+}
+
+func TestGetWord(t *testing.T) {
+	l := New(strings.NewReader("+=var/test--"))
+
+	l.ReadChar()
+	l.ReadChar()
+
+	c := l.ReadChar()
+	res := l.GetWord(c)
+
+	if res != "var" {
+		t.Errorf("Expected %s got %s", "var", res)
+	}
+
+	l.ReadChar()
+
+	c = l.ReadChar()
+	res = l.GetWord(c)
+
+	if res != "test" {
+		t.Errorf("Expected %s got %s", "test", res)
 	}
 }
 

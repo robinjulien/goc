@@ -76,7 +76,6 @@ func (l *Lexer) NextToken() token.Token {
 	case 0:
 		return l.NewToken(token.EOF)
 	case '*':
-		fmt.Println("astrerixx")
 		return l.NewToken(token.Asterisk)
 	case '/':
 		return l.NewToken(token.Divide)
@@ -111,9 +110,9 @@ func (l *Lexer) NextToken() token.Token {
 	case '=': // cases =, ==
 		if l.PeekNextChar() == '=' {
 			l.ReadChar()
-			return l.NewToken(token.EqualsTo)
+			return l.NewToken(token.Equals)
 		}
-		return l.NewToken(token.Equals)
+		return l.NewToken(token.Assign)
 	case '<': // cases <, <=
 		if l.PeekNextChar() == '=' {
 			l.ReadChar()
@@ -125,11 +124,11 @@ func (l *Lexer) NextToken() token.Token {
 			l.ReadChar()
 			return l.NewToken(token.GreaterThanEqual)
 		}
-		return l.NewToken(token.LowerThan)
+		return l.NewToken(token.GreaterThan)
 	case '!': // cases !, !=
 		if l.PeekNextChar() == '=' {
 			l.ReadChar()
-			return l.NewToken(token.NotEqualsTo)
+			return l.NewToken(token.NotEquals)
 		}
 		return l.NewToken(token.Not)
 	case '&': // cases &, &&
@@ -139,9 +138,9 @@ func (l *Lexer) NextToken() token.Token {
 		}
 		return l.NewToken(token.BitwiseAnd)
 	case '|': // cases |, ||
-		if l.PeekNextChar() == '+' {
+		if l.PeekNextChar() == '|' {
 			l.ReadChar()
-			return l.NewToken(token.Increment)
+			return l.NewToken(token.LogicalOr)
 		}
 		return l.NewToken(token.BitwiseOr)
 	default:
@@ -154,8 +153,15 @@ func (l *Lexer) GetWord(firstChar byte) string {
 	buf := bytes.Buffer{}
 	buf.WriteByte(firstChar)
 
-	for peekedBytes, err := l.reader.Peek(1); err == nil && IsAlphaNumerical(peekedBytes[0]); {
-		buf.WriteByte(peekedBytes[0])
+	for {
+		peekedBytes, err := l.reader.Peek(1)
+
+		if err != nil || !IsAlphaNumerical(peekedBytes[0]) {
+			break
+		}
+
+		c := l.ReadChar()
+		buf.WriteByte(c)
 	}
 
 	return buf.String()

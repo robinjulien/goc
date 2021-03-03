@@ -21,6 +21,11 @@ const (
 	ParanthesisClose
 
 	Return
+	TypeDef
+	Struct
+	Union
+	Register
+	Static
 
 	Plus
 	Minus
@@ -34,13 +39,13 @@ const (
 	GreaterThan
 	LowerThanEqual
 	GreaterThanEqual
-	EqualsTo
-	NotEqualsTo
+	Equals
+	NotEquals
 
 	LogicalAnd
 	LogicalOr
 
-	Equals
+	Assign
 
 	Not
 
